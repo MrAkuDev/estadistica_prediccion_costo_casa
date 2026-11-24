@@ -1,6 +1,6 @@
 """
 Punto de entrada de la aplicación Streamlit:
-Predicción del Valor de Propiedades Inmobiliarias (Regresión Lineal - scikit-learn).
+Estudio Estadístico y Valuador de Viviendas (Regresión Lineal - scikit-learn).
 """
 
 from __future__ import annotations
@@ -9,19 +9,22 @@ import pandas as pd
 import streamlit as st
 
 from src.data_loader import artifacts_exist, load_metrics, load_model, load_sample
+from src.styles import inject_styles, render_hero
 from src.tabs.eda import render_eda_tab
 from src.tabs.models import render_models_tab
-from src.tabs.sidebar import render_sidebar
 from src.tabs.simulator import render_simulator_tab
 
 st.set_page_config(
-    page_title="Predicción de Precio de Casas | Regresión Lineal",
-    page_icon="🏠",
+    page_title="Valuador Inmobiliario | Regresión Lineal",
+    page_icon="🏡",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
 
 def main() -> None:
+    inject_styles()
+
     if not artifacts_exist():
         st.error(
             "No se encontraron los artefactos del modelo. Ejecuta `python train_model.py` primero."
@@ -36,30 +39,31 @@ def main() -> None:
         m for m in metrics["model_comparison"] if m["category"] == "Estadístico (Principal)"
     )
 
-    render_sidebar(metrics, lr_metrics)
-
-    st.title("Predicción del Valor de Propiedades Inmobiliarias")
-    st.markdown(
-        "Dashboard interactivo y simulador de precios basado en el dataset de "
-        "propiedades residenciales (`realtor-data.zip.csv`) y un modelo de "
-        "**Regresión Lineal Múltiple** entrenado con `scikit-learn`."
+    render_hero(
+        train_rows=metrics["train_rows"],
+        num_states=metrics["data_summary"]["num_states"],
+        r2_score=lr_metrics["r2"],
     )
 
-    tab_sim, tab_eda, tab_models = st.tabs(
-        [
-            "🧮 Simulador de Precio",
-            "📊 Análisis Exploratorio (EDA)",
-            "🤖 Evaluación y Comparación de Modelos",
-        ]
-    )
+    section = st.segmented_control(
+        "Navegación",
+        options=[
+            "Valuador de Vivienda",
+            "Exploración del Mercado",
+            "Comparativa de Modelos",
+        ],
+        default="Valuador de Vivienda",
+        label_visibility="collapsed",
+        width="stretch",
+    ) or "Valuador de Vivienda"
 
-    with tab_sim:
-        render_simulator_tab(model, metrics, states_df)
+    st.write("")
 
-    with tab_eda:
+    if section == "Valuador de Vivienda":
+        render_simulator_tab(model, metrics, sample_df, states_df)
+    elif section == "Exploración del Mercado":
         render_eda_tab(metrics, sample_df, states_df)
-
-    with tab_models:
+    else:
         render_models_tab(metrics, sample_df)
 
 
