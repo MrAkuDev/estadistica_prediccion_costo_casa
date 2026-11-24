@@ -1,0 +1,613 @@
+{
+  "data_summary": {
+    "raw_rows": 2226382,
+    "raw_cols": 12,
+    "after_dropna_rows": 1360716,
+    "clean_rows": 1294939,
+    "retained_pct": 58.16,
+    "num_states": 53,
+    "missing_raw": {
+      "brokered_by": 4533,
+      "status": 0,
+      "price": 1541,
+      "bed": 481317,
+      "bath": 511771,
+      "acre_lot": 325589,
+      "street": 10866,
+      "city": 1407,
+      "state": 8,
+      "zip_code": 299,
+      "house_size": 568484,
+      "prev_sold_date": 734297
+    },
+    "status_counts_clean": {
+      "for_sale": 705009,
+      "sold": 589930
+    }
+  },
+  "train_rows": 1035951,
+  "test_rows": 258988,
+  "descriptive_stats": {
+    "price": {
+      "count": 1294939,
+      "mean": 455928.62,
+      "std": 334082.18,
+      "min": 30000.0,
+      "p25": 235000.0,
+      "median": 369900.0,
+      "p75": 575000.0,
+      "max": 2000000.0
+    },
+    "bed": {
+      "count": 1294939,
+      "mean": 3.33,
+      "std": 0.99,
+      "min": 1.0,
+      "p25": 3.0,
+      "median": 3.0,
+      "p75": 4.0,
+      "max": 10.0
+    },
+    "bath": {
+      "count": 1294939,
+      "mean": 2.45,
+      "std": 0.99,
+      "min": 1.0,
+      "p25": 2.0,
+      "median": 2.0,
+      "p75": 3.0,
+      "max": 8.0
+    },
+    "acre_lot": {
+      "count": 1294939,
+      "mean": 0.73,
+      "std": 1.88,
+      "min": 0.01,
+      "p25": 0.14,
+      "median": 0.21,
+      "p75": 0.42,
+      "max": 20.0
+    },
+    "house_size": {
+      "count": 1294939,
+      "mean": 1994.03,
+      "std": 926.87,
+      "min": 400.0,
+      "p25": 1350.0,
+      "median": 1791.0,
+      "p75": 2404.0,
+      "max": 8000.0
+    }
+  },
+  "correlation_matrix": {
+    "price": {
+      "price": 1.0,
+      "bed": 0.31,
+      "bath": 0.4979,
+      "acre_lot": 0.0748,
+      "house_size": 0.5006
+    },
+    "bed": {
+      "price": 0.31,
+      "bed": 1.0,
+      "bath": 0.5794,
+      "acre_lot": -0.0041,
+      "house_size": 0.6351
+    },
+    "bath": {
+      "price": 0.4979,
+      "bed": 0.5794,
+      "bath": 1.0,
+      "acre_lot": 0.0421,
+      "house_size": 0.753
+    },
+    "acre_lot": {
+      "price": 0.0748,
+      "bed": -0.0041,
+      "bath": 0.0421,
+      "acre_lot": 1.0,
+      "house_size": 0.1095
+    },
+    "house_size": {
+      "price": 0.5006,
+      "bed": 0.6351,
+      "bath": 0.753,
+      "acre_lot": 0.1095,
+      "house_size": 1.0
+    }
+  },
+  "model_comparison": [
+    {
+      "name": "Regresión Lineal (Solo Numéricas)",
+      "short_name": "Reg. Lineal\n(Numéricas)",
+      "category": "Estadístico",
+      "mse": 79581293164.19,
+      "rmse": 282101.57,
+      "mae": 195832.09,
+      "r2": 0.2836
+    },
+    {
+      "name": "Regresión Lineal (Numéricas + Estado)",
+      "short_name": "Reg. Lineal\n(+ Estado)",
+      "category": "Estadístico (Principal)",
+      "mse": 52491321953.81,
+      "rmse": 229109.85,
+      "mae": 151944.68,
+      "r2": 0.5275
+    },
+    {
+      "name": "Regresión Ridge (L2 + Estado)",
+      "short_name": "Ridge\n(+ Estado)",
+      "category": "Machine Learning",
+      "mse": 52304061206.5,
+      "rmse": 228700.81,
+      "mae": 151443.63,
+      "r2": 0.5292
+    },
+    {
+      "name": "Árbol de Decisión (max_depth=14)",
+      "short_name": "Árbol de\nDecisión",
+      "category": "Machine Learning",
+      "mse": 51702498220.78,
+      "rmse": 227381.83,
+      "mae": 149555.07,
+      "r2": 0.5346
+    },
+    {
+      "name": "Gradient Boosting (HistGBR)",
+      "short_name": "Gradient\nBoosting",
+      "category": "Machine Learning",
+      "mse": 47304837989.83,
+      "rmse": 217496.75,
+      "mae": 141119.92,
+      "r2": 0.5742
+    }
+  ],
+  "linear_regression_simple": {
+    "intercept": 49926.85,
+    "coefficients": {
+      "bed": -20152.7027,
+      "bath": 99782.8212,
+      "acre_lot": 5115.5337,
+      "house_size": 112.7731
+    }
+  },
+  "linear_regression_full": {
+    "intercept": -18577.54,
+    "base_state": "Alabama",
+    "numeric_coefficients": {
+      "bed": -23434.5579,
+      "bath": 83779.4797,
+      "acre_lot": 6482.1645,
+      "house_size": 143.7341
+    },
+    "state_coefficients": {
+      "Alabama": 0.0,
+      "Alaska": 11542.75,
+      "Arizona": 101025.24,
+      "Arkansas": -102323.87,
+      "California": 416055.18,
+      "Colorado": 131778.61,
+      "Connecticut": 69803.74,
+      "Delaware": -32596.9,
+      "District of Columbia": 427159.46,
+      "Florida": 84236.28,
+      "Georgia": -77053.98,
+      "Guam": 7560.13,
+      "Hawaii": 507622.77,
+      "Idaho": 155394.5,
+      "Illinois": -76504.11,
+      "Indiana": -115909.21,
+      "Iowa": -78796.13,
+      "Kansas": -128338.49,
+      "Kentucky": -110474.25,
+      "Louisiana": -91753.57,
+      "Maine": 26183.81,
+      "Maryland": 3168.88,
+      "Massachusetts": 219785.62,
+      "Michigan": -73850.5,
+      "Minnesota": -54299.3,
+      "Mississippi": -175386.78,
+      "Missouri": -104326.87,
+      "Montana": 126422.42,
+      "Nebraska": -134386.66,
+      "Nevada": 159199.23,
+      "New Hampshire": 49947.22,
+      "New Jersey": 57676.61,
+      "New Mexico": -27252.16,
+      "New York": 61591.37,
+      "North Carolina": -19635.49,
+      "North Dakota": -108824.57,
+      "Ohio": -131682.65,
+      "Oklahoma": -117301.38,
+      "Oregon": 181523.17,
+      "Pennsylvania": -61986.43,
+      "Puerto Rico": -49624.91,
+      "Rhode Island": 71588.95,
+      "South Carolina": -24607.28,
+      "South Dakota": -15743.85,
+      "Tennessee": -7567.06,
+      "Texas": -35037.24,
+      "Utah": 138654.35,
+      "Vermont": -10799.12,
+      "Virginia": 9520.09,
+      "Washington": 254216.03,
+      "West Virginia": -176672.51,
+      "Wisconsin": -69231.27,
+      "Wyoming": -26599.27
+    }
+  },
+  "states": [
+    {
+      "state": "Alabama",
+      "count": 14095,
+      "mean_price": 303461.42632139055,
+      "median_price": 249900.0,
+      "median_house_size": 1868.0
+    },
+    {
+      "state": "Alaska",
+      "count": 749,
+      "mean_price": 487068.88117489987,
+      "median_price": 445000.0,
+      "median_house_size": 2016.0
+    },
+    {
+      "state": "Arizona",
+      "count": 52320,
+      "mean_price": 480660.49013761466,
+      "median_price": 420000.0,
+      "median_house_size": 1733.0
+    },
+    {
+      "state": "Arkansas",
+      "count": 10738,
+      "mean_price": 300510.50456323335,
+      "median_price": 250000.0,
+      "median_house_size": 1800.0
+    },
+    {
+      "state": "California",
+      "count": 154772,
+      "mean_price": 777131.6354573178,
+      "median_price": 685000.0,
+      "median_house_size": 1600.0
+    },
+    {
+      "state": "Colorado",
+      "count": 17664,
+      "mean_price": 631415.4103826992,
+      "median_price": 550000.0,
+      "median_house_size": 2289.0
+    },
+    {
+      "state": "Connecticut",
+      "count": 8734,
+      "mean_price": 490684.30833524157,
+      "median_price": 375000.0,
+      "median_house_size": 1864.0
+    },
+    {
+      "state": "Delaware",
+      "count": 5935,
+      "mean_price": 401885.4621735468,
+      "median_price": 349900.0,
+      "median_house_size": 1970.0
+    },
+    {
+      "state": "District of Columbia",
+      "count": 2423,
+      "mean_price": 916985.4725546843,
+      "median_price": 849000.0,
+      "median_house_size": 1863.0
+    },
+    {
+      "state": "Florida",
+      "count": 121444,
+      "mean_price": 454673.31153453444,
+      "median_price": 369999.0,
+      "median_house_size": 1683.0
+    },
+    {
+      "state": "Georgia",
+      "count": 47898,
+      "mean_price": 386998.7836235333,
+      "median_price": 330000.0,
+      "median_house_size": 1990.0
+    },
+    {
+      "state": "Guam",
+      "count": 108,
+      "mean_price": 584384.1388888889,
+      "median_price": 572500.0,
+      "median_house_size": 1946.0
+    },
+    {
+      "state": "Hawaii",
+      "count": 3321,
+      "mean_price": 804594.2264378199,
+      "median_price": 730000.0,
+      "median_house_size": 1240.0
+    },
+    {
+      "state": "Idaho",
+      "count": 11253,
+      "mean_price": 588465.8562161202,
+      "median_price": 515000.0,
+      "median_house_size": 2007.0
+    },
+    {
+      "state": "Illinois",
+      "count": 45581,
+      "mean_price": 329735.5301551085,
+      "median_price": 270000.0,
+      "median_house_size": 1740.0
+    },
+    {
+      "state": "Indiana",
+      "count": 11186,
+      "mean_price": 300598.004648668,
+      "median_price": 249900.0,
+      "median_house_size": 1876.0
+    },
+    {
+      "state": "Iowa",
+      "count": 16146,
+      "mean_price": 253619.36591106156,
+      "median_price": 219000.0,
+      "median_house_size": 1488.0
+    },
+    {
+      "state": "Kansas",
+      "count": 10855,
+      "mean_price": 288480.3827729157,
+      "median_price": 220000.0,
+      "median_house_size": 1900.0
+    },
+    {
+      "state": "Kentucky",
+      "count": 14989,
+      "mean_price": 266703.39609046635,
+      "median_price": 225000.0,
+      "median_house_size": 1691.0
+    },
+    {
+      "state": "Louisiana",
+      "count": 14085,
+      "mean_price": 298315.6595669152,
+      "median_price": 249450.0,
+      "median_house_size": 1836.0
+    },
+    {
+      "state": "Maine",
+      "count": 2046,
+      "mean_price": 413240.79765395896,
+      "median_price": 325000.0,
+      "median_house_size": 1718.0
+    },
+    {
+      "state": "Maryland",
+      "count": 31853,
+      "mean_price": 464882.9914293787,
+      "median_price": 399999.0,
+      "median_house_size": 1934.0
+    },
+    {
+      "state": "Massachusetts",
+      "count": 26355,
+      "mean_price": 599980.3576171504,
+      "median_price": 515000.0,
+      "median_house_size": 1810.0
+    },
+    {
+      "state": "Michigan",
+      "count": 20896,
+      "mean_price": 280794.97702909645,
+      "median_price": 209000.0,
+      "median_house_size": 1568.0
+    },
+    {
+      "state": "Minnesota",
+      "count": 32035,
+      "mean_price": 380753.3329795536,
+      "median_price": 329900.0,
+      "median_house_size": 2099.0
+    },
+    {
+      "state": "Mississippi",
+      "count": 7063,
+      "mean_price": 275872.44867619994,
+      "median_price": 235000.0,
+      "median_house_size": 1920.0
+    },
+    {
+      "state": "Missouri",
+      "count": 29006,
+      "mean_price": 282882.80759153276,
+      "median_price": 230000.0,
+      "median_house_size": 1654.0
+    },
+    {
+      "state": "Montana",
+      "count": 4425,
+      "mean_price": 530159.9907344633,
+      "median_price": 450000.0,
+      "median_house_size": 1960.0
+    },
+    {
+      "state": "Nebraska",
+      "count": 4193,
+      "mean_price": 309049.21058907703,
+      "median_price": 260000.0,
+      "median_house_size": 1906.0
+    },
+    {
+      "state": "Nevada",
+      "count": 9562,
+      "mean_price": 562038.2164819075,
+      "median_price": 480000.0,
+      "median_house_size": 1780.5
+    },
+    {
+      "state": "New Hampshire",
+      "count": 1622,
+      "mean_price": 516258.87237977807,
+      "median_price": 429900.0,
+      "median_house_size": 2006.0
+    },
+    {
+      "state": "New Jersey",
+      "count": 18506,
+      "mean_price": 458288.8987895818,
+      "median_price": 379000.0,
+      "median_house_size": 1758.0
+    },
+    {
+      "state": "New Mexico",
+      "count": 11496,
+      "mean_price": 364992.9284098817,
+      "median_price": 299000.0,
+      "median_house_size": 1785.0
+    },
+    {
+      "state": "New York",
+      "count": 46806,
+      "mean_price": 429043.1920693928,
+      "median_price": 285000.0,
+      "median_house_size": 1696.0
+    },
+    {
+      "state": "North Carolina",
+      "count": 36435,
+      "mean_price": 400079.4434197887,
+      "median_price": 334900.0,
+      "median_house_size": 1822.0
+    },
+    {
+      "state": "North Dakota",
+      "count": 2347,
+      "mean_price": 317688.75926714955,
+      "median_price": 287000.0,
+      "median_house_size": 2097.0
+    },
+    {
+      "state": "Ohio",
+      "count": 39972,
+      "mean_price": 227002.09011307915,
+      "median_price": 179000.0,
+      "median_house_size": 1676.0
+    },
+    {
+      "state": "Oklahoma",
+      "count": 25959,
+      "mean_price": 265109.2151469625,
+      "median_price": 219000.0,
+      "median_house_size": 1716.0
+    },
+    {
+      "state": "Oregon",
+      "count": 20925,
+      "mean_price": 570208.7179928315,
+      "median_price": 514850.0,
+      "median_house_size": 1768.0
+    },
+    {
+      "state": "Pennsylvania",
+      "count": 50477,
+      "mean_price": 319881.019850625,
+      "median_price": 259900.0,
+      "median_house_size": 1693.0
+    },
+    {
+      "state": "Puerto Rico",
+      "count": 1609,
+      "mean_price": 302662.30826600373,
+      "median_price": 157000.0,
+      "median_house_size": 1500.0
+    },
+    {
+      "state": "Rhode Island",
+      "count": 6395,
+      "mean_price": 455854.8639562158,
+      "median_price": 375000.0,
+      "median_house_size": 1620.0
+    },
+    {
+      "state": "South Carolina",
+      "count": 16542,
+      "mean_price": 407740.3072784428,
+      "median_price": 330583.5,
+      "median_house_size": 1928.0
+    },
+    {
+      "state": "South Dakota",
+      "count": 1956,
+      "mean_price": 389510.8813905931,
+      "median_price": 324950.0,
+      "median_house_size": 1870.0
+    },
+    {
+      "state": "Tennessee",
+      "count": 17371,
+      "mean_price": 411389.87922399404,
+      "median_price": 329900.0,
+      "median_house_size": 1808.0
+    },
+    {
+      "state": "Texas",
+      "count": 141513,
+      "mean_price": 398829.8217407588,
+      "median_price": 330000.0,
+      "median_house_size": 1971.0
+    },
+    {
+      "state": "Utah",
+      "count": 8993,
+      "mean_price": 663196.1716890915,
+      "median_price": 577880.0,
+      "median_house_size": 2402.0
+    },
+    {
+      "state": "Vermont",
+      "count": 1099,
+      "mean_price": 420591.53594176524,
+      "median_price": 339900.0,
+      "median_house_size": 2000.0
+    },
+    {
+      "state": "Virginia",
+      "count": 42606,
+      "mean_price": 489882.1314603577,
+      "median_price": 415000.0,
+      "median_house_size": 2016.0
+    },
+    {
+      "state": "Washington",
+      "count": 44658,
+      "mean_price": 646896.8641900667,
+      "median_price": 559000.0,
+      "median_house_size": 1848.0
+    },
+    {
+      "state": "West Virginia",
+      "count": 6577,
+      "mean_price": 243782.6429983275,
+      "median_price": 209000.0,
+      "median_house_size": 1768.0
+    },
+    {
+      "state": "Wisconsin",
+      "count": 17813,
+      "mean_price": 311698.18009319034,
+      "median_price": 265000.0,
+      "median_house_size": 1792.0
+    },
+    {
+      "state": "Wyoming",
+      "count": 1532,
+      "mean_price": 416692.7506527415,
+      "median_price": 349000.0,
+      "median_house_size": 2128.0
+    }
+  ]
+}

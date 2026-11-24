@@ -221,3 +221,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dataset crudo pesado (>100 MB, no subir a GitHub)
+realtor-data.zip.csv
+
+# Archivos auxiliares de compilación LaTeX
+informe/*.aux
+informe/*.log
+informe/*.out
+informe/*.toc
+informe/*.fls
+informe/*.fdb_latexmk
+informe/*.synctex.gz
