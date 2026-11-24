@@ -175,34 +175,16 @@ def plot_top_states(states_df: pd.DataFrame, top_n: int = 12) -> Figure:
     return fig
 
 
-def plot_model_comparison(model_comparison: list[dict]) -> Figure:
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.0, 4.0), facecolor=BG_CARD)
-    short_names = [m["short_name"].replace("\n", " ") for m in model_comparison]
-    r2_vals = [m["r2"] for m in model_comparison]
-    rmse_vals = [m["rmse"] / 1_000 for m in model_comparison]
-    colors = ["#95A5A6", FOREST, SAGE, SAND, TERRACOTTA]
-
-    y = np.arange(len(short_names))
-    b1 = ax1.barh(y, r2_vals[::-1], color=colors[: len(r2_vals)][::-1], height=0.58)
-    ax1.set_yticks(y)
-    ax1.set_yticklabels(short_names[::-1])
-    ax1.set_xlabel("Coeficiente R² (Mayor es mejor)", color=CHARCOAL)
-    ax1.set_xlim(0, max(r2_vals) * 1.2)
-    for bar, v in zip(b1, r2_vals[::-1]):
-        ax1.text(v + 0.012, bar.get_y() + bar.get_height() / 2, f"{v:.4f}", va="center", fontsize=8.5, fontweight="bold", color=CHARCOAL)
-    _style_axis(ax1)
-    ax1.grid(axis="x", alpha=0.25, linestyle="--")
-
-    b2 = ax2.barh(y, rmse_vals[::-1], color=colors[: len(rmse_vals)][::-1], height=0.58)
-    ax2.set_yticks(y)
-    ax2.set_yticklabels([""] * len(short_names))
-    ax2.set_xlabel("RMSE en Miles de USD (Menor es mejor)", color=CHARCOAL)
-    ax2.set_xlim(0, max(rmse_vals) * 1.24)
-    for bar, v in zip(b2, rmse_vals[::-1]):
-        ax2.text(v + 4, bar.get_y() + bar.get_height() / 2, f"${v:,.1f}k", va="center", fontsize=8.5, fontweight="bold", color=CHARCOAL)
-    _style_axis(ax2)
-    ax2.grid(axis="x", alpha=0.25, linestyle="--")
-
+def plot_residuals_distribution(sample_df: pd.DataFrame) -> Figure:
+    residuals = (sample_df["price"] - sample_df["predicted_price"]) / 1_000
+    fig, ax = plt.subplots(figsize=(6.4, 4.4), facecolor=BG_CARD)
+    ax.hist(residuals, bins=42, range=(-800, 800), color=SAND, alpha=0.88, edgecolor=BG_CARD)
+    ax.axvline(0, color=TERRACOTTA, linestyle="--", linewidth=1.8, label="Residuo = 0")
+    ax.set_xlabel("Residuo: Real − Predicho (Miles de USD)", color=CHARCOAL)
+    ax.set_ylabel("Frecuencia (muestra de 8,000)", color=CHARCOAL)
+    _style_axis(ax)
+    ax.grid(axis="y", alpha=0.25, linestyle="--")
+    ax.legend(frameon=False)
     fig.tight_layout()
     return fig
 

@@ -134,33 +134,6 @@
       "rmse": 229109.85,
       "mae": 151944.68,
       "r2": 0.5275
-    },
-    {
-      "name": "Regresión Ridge (L2 + Estado)",
-      "short_name": "Ridge\n(+ Estado)",
-      "category": "Machine Learning",
-      "mse": 52304061206.5,
-      "rmse": 228700.81,
-      "mae": 151443.63,
-      "r2": 0.5292
-    },
-    {
-      "name": "Árbol de Decisión (max_depth=14)",
-      "short_name": "Árbol de\nDecisión",
-      "category": "Machine Learning",
-      "mse": 51702498220.78,
-      "rmse": 227381.83,
-      "mae": 149555.07,
-      "r2": 0.5346
-    },
-    {
-      "name": "Gradient Boosting (HistGBR)",
-      "short_name": "Gradient\nBoosting",
-      "category": "Machine Learning",
-      "mse": 47304837989.83,
-      "rmse": 217496.75,
-      "mae": 141119.92,
-      "r2": 0.5742
     }
   ],
   "linear_regression_simple": {

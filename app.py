@@ -50,7 +50,7 @@ def main() -> None:
         options=[
             "Valuador de Vivienda",
             "Exploración del Mercado",
-            "Comparativa de Modelos",
+            "Evaluación del Modelo",
         ],
         default="Valuador de Vivienda",
         label_visibility="collapsed",

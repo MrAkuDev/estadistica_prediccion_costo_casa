@@ -19,13 +19,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.preprocessing import OneHotEncoder
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_RAW = BASE_DIR / "realtor-data.zip.csv"
@@ -114,53 +112,71 @@ def generate_figures(
     y_test_sample: np.ndarray,
     y_pred_sample: np.ndarray,
 ) -> None:
-    print("Generando figuras para el informe en LaTeX...")
+    print("Generando figuras para el informe en LaTeX (paleta editorial)...")
+
+    forest = "#1B4332"
+    sage = "#40916C"
+    mint = "#52B788"
+    terracotta = "#C85A32"
+    sand = "#D4A373"
+    charcoal = "#2D3A3A"
+    slate = "#95A5A6"
+
+    def style_ax(ax) -> None:
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_color("#CFC8B8")
+        ax.spines["bottom"].set_color("#CFC8B8")
+        ax.tick_params(colors=charcoal)
 
     # 1. Distribuciones de variables numéricas
     fig, axes = plt.subplots(2, 3, figsize=(13, 7.5))
     plot_specs = [
-        ("price", "Precio (USD)", "#2563eb", 1_000, "Miles de USD"),
-        ("house_size", "Superficie construida (ft²)", "#0ea5e9", 1, "Pies cuadrados (ft²)"),
-        ("bed", "Habitaciones (bed)", "#10b981", 1, "Número de habitaciones"),
-        ("bath", "Baños (bath)", "#f59e0b", 1, "Número de baños"),
-        ("acre_lot", "Tamaño del terreno (acres)", "#8b5cf6", 1, "Acres"),
+        ("price", "Precio (USD)", forest, 1_000, "Miles de USD"),
+        ("house_size", "Superficie construida (ft²)", sage, 1, "Pies cuadrados (ft²)"),
+        ("bed", "Habitaciones (bed)", mint, 1, "Número de habitaciones"),
+        ("bath", "Baños (bath)", sand, 1, "Número de baños"),
+        ("acre_lot", "Tamaño del terreno (acres)", terracotta, 1, "Acres"),
     ]
     sample_plot = df_clean.sample(n=min(100_000, len(df_clean)), random_state=42)
     for ax, (col, title, color, div, xlabel) in zip(axes.flat, plot_specs):
         vals = sample_plot[col] / div
         if col in ("bed", "bath"):
             bins = np.arange(vals.min() - 0.5, vals.max() + 1.5, 1)
-            ax.hist(vals, bins=bins, color=color, alpha=0.82, edgecolor="white")
+            ax.hist(vals, bins=bins, color=color, alpha=0.86, edgecolor="white")
         else:
-            ax.hist(vals, bins=40, color=color, alpha=0.82, edgecolor="white")
-        ax.axvline(vals.median(), color="#dc2626", linestyle="--", linewidth=1.3, label=f"Mediana: {vals.median():.2f}")
-        ax.set_title(title, fontweight="bold")
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel("Frecuencia")
-        ax.legend(fontsize=8)
+            ax.hist(vals, bins=40, color=color, alpha=0.86, edgecolor="white")
+        ax.axvline(vals.median(), color=terracotta if color != terracotta else forest, linestyle="--", linewidth=1.5, label=f"Mediana: {vals.median():.2f}")
+        ax.set_title(title, fontweight="bold", color=forest)
+        ax.set_xlabel(xlabel, color=charcoal)
+        ax.set_ylabel("Frecuencia", color=charcoal)
+        style_ax(ax)
+        ax.grid(axis="y", alpha=0.25, linestyle="--")
+        ax.legend(frameon=False, fontsize=8.5)
 
-    # Sexto subplot: Precio por estado (Top 5 vs Resto boxplot resumido -> histograma log precio)
     ax_last = axes.flat[5]
     log_price = np.log10(sample_plot["price"])
-    ax_last.hist(log_price, bins=40, color="#334155", alpha=0.82, edgecolor="white")
-    ax_last.set_title("Distribución de log10(Precio)", fontweight="bold")
-    ax_last.set_xlabel("log10(Precio en USD)")
-    ax_last.set_ylabel("Frecuencia")
+    ax_last.hist(log_price, bins=40, color=charcoal, alpha=0.82, edgecolor="white")
+    ax_last.set_title("Distribución de log10(Precio)", fontweight="bold", color=forest)
+    ax_last.set_xlabel("log10(Precio en USD)", color=charcoal)
+    ax_last.set_ylabel("Frecuencia", color=charcoal)
+    style_ax(ax_last)
+    ax_last.grid(axis="y", alpha=0.25, linestyle="--")
 
-    fig.suptitle("Distribución de Variables Principales del Dataset Limpio", fontsize=13, fontweight="bold", y=0.99)
+    fig.suptitle("Distribución de Variables Principales del Dataset Limpio", fontsize=13, fontweight="bold", color=forest, y=0.99)
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "distribuciones.png", bbox_inches="tight")
     plt.close(fig)
 
-    # 2. Matriz de correlación
+    # 2. Matriz de correlación (escala BrBG igual que en Streamlit)
     fig, ax = plt.subplots(figsize=(7.2, 6.0))
     labels = ["Precio", "Habitaciones", "Baños", "Terreno (acres)", "Superficie (ft²)"]
     mat = corr_df.values
-    im = ax.imshow(mat, cmap="RdBu_r", vmin=-1, vmax=1, aspect="equal")
+    im = ax.imshow(mat, cmap="BrBG", vmin=-1, vmax=1, aspect="equal")
     ax.set_xticks(range(len(labels)))
     ax.set_yticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=30, ha="right", fontsize=10)
-    ax.set_yticklabels(labels, fontsize=10)
+    ax.set_xticklabels(labels, rotation=30, ha="right", fontsize=10, color=charcoal)
+    ax.set_yticklabels(labels, fontsize=10, color=charcoal)
     ax.set_xticks(np.arange(-0.5, len(labels), 1), minor=True)
     ax.set_yticks(np.arange(-0.5, len(labels), 1), minor=True)
     ax.grid(False)
@@ -169,75 +185,58 @@ def generate_figures(
     for i in range(len(labels)):
         for j in range(len(labels)):
             val = mat[i, j]
-            text_color = "white" if abs(val) > 0.55 else "#111827"
+            text_color = "white" if abs(val) > 0.55 else "#1E2421"
             ax.text(j, i, f"{val:.2f}", ha="center", va="center", color=text_color, fontweight="bold", fontsize=10.5)
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label("Correlación de Pearson (r)")
-    ax.set_title("Matriz de Correlación de Variables Numéricas", fontweight="bold", pad=12)
+    cbar.set_label("Correlación de Pearson (r)", color=charcoal)
+    ax.set_title("Matriz de Correlación de Variables Numéricas", fontweight="bold", color=forest, pad=12)
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "correlacion.png", bbox_inches="tight")
     plt.close(fig)
 
-    # 3. Top 15 estados por precio mediano
+    # 3. Top 15 estados por precio mediano (gráfico tipo lollipop igual que en Streamlit)
     top15 = state_stats.sort_values("median_price", ascending=False).head(15).iloc[::-1]
-    fig, ax = plt.subplots(figsize=(9, 5.8))
-    bars = ax.barh(top15["state"], top15["median_price"] / 1_000, color="#2563eb", alpha=0.88)
-    for bar, val in zip(bars, top15["median_price"] / 1_000):
-        ax.text(val + 8, bar.get_y() + bar.get_height() / 2, f"${val:,.0f}k", va="center", fontsize=8.5)
-    ax.set_xlabel("Precio Mediano (Miles de USD)")
-    ax.set_title("Top 15 Estados con Mayor Precio Mediano de Vivienda", fontweight="bold")
-    ax.set_xlim(0, top15["median_price"].max() / 1_000 * 1.15)
+    fig, ax = plt.subplots(figsize=(9.2, 5.8))
+    y_pos = np.arange(len(top15))
+    vals = top15["median_price"] / 1_000
+    ax.hlines(y=y_pos, xmin=0, xmax=vals, color=sage, linewidth=2.6, alpha=0.88)
+    ax.scatter(vals, y_pos, color=forest, s=75, zorder=3)
+    for y, v in zip(y_pos, vals):
+        ax.text(v + 14, y, f"${v:,.0f}k", va="center", fontsize=8.5, fontweight="bold", color=charcoal)
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(top15["state"])
+    ax.set_xlabel("Precio Mediano (Miles de USD)", color=charcoal)
+    ax.set_title("Top 15 Estados con Mayor Precio Mediano de Vivienda", fontweight="bold", color=forest)
+    ax.set_xlim(0, vals.max() * 1.16)
+    style_ax(ax)
+    ax.grid(axis="x", alpha=0.25, linestyle="--")
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "top_estados.png", bbox_inches="tight")
     plt.close(fig)
 
-    # 4. Comparación de modelos (R2 y RMSE)
-    names = [m["short_name"] for m in model_results]
-    r2_vals = [m["r2"] for m in model_results]
-    rmse_vals = [m["rmse"] / 1_000 for m in model_results]
-    colors = ["#94a3b8", "#2563eb", "#0ea5e9", "#f59e0b", "#10b981"]
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 4.6))
-    b1 = ax1.bar(names, r2_vals, color=colors[: len(names)], alpha=0.9)
-    for bar, v in zip(b1, r2_vals):
-        ax1.text(bar.get_x() + bar.get_width() / 2, v + 0.015, f"{v:.4f}", ha="center", fontsize=8.5, fontweight="bold")
-    ax1.set_ylim(0, max(r2_vals) * 1.18)
-    ax1.set_ylabel("Coeficiente de Determinación (R²)")
-    ax1.set_title("Comparación de R² (Mayor es mejor)", fontweight="bold")
-    ax1.tick_params(axis="x", rotation=18)
-
-    b2 = ax2.bar(names, rmse_vals, color=colors[: len(names)], alpha=0.9)
-    for bar, v in zip(b2, rmse_vals):
-        ax2.text(bar.get_x() + bar.get_width() / 2, v + 5, f"${v:,.1f}k", ha="center", fontsize=8.5, fontweight="bold")
-    ax2.set_ylim(0, max(rmse_vals) * 1.18)
-    ax2.set_ylabel("RMSE (Miles de USD)")
-    ax2.set_title("Comparación de RMSE (Menor es mejor)", fontweight="bold")
-    ax2.tick_params(axis="x", rotation=18)
-
-    fig.suptitle("Evaluación Comparativa de Modelos Predictivos (Conjunto de Prueba)", fontsize=12.5, fontweight="bold", y=1.01)
-    fig.tight_layout()
-    fig.savefig(FIGURES_DIR / "comparacion_modelos.png", bbox_inches="tight")
-    plt.close(fig)
-
-    # 5. Real vs Predicho y Distribución de Residuos (Regresión Lineal + Estado)
+    # 4. Real vs Predicho y Distribución de Residuos (paleta bosque y terracota)
     residuals = (y_test_sample - y_pred_sample) / 1_000
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.5, 4.8))
-    ax1.scatter(y_test_sample / 1_000, y_pred_sample / 1_000, alpha=0.18, s=8, color="#2563eb", edgecolors="none")
+    ax1.scatter(y_test_sample / 1_000, y_pred_sample / 1_000, alpha=0.18, s=9, color=sage, edgecolors="none")
     lims = [0, 2000]
-    ax1.plot(lims, lims, "--", color="#dc2626", linewidth=1.5, label="Predicción perfecta (y = x)")
+    ax1.plot(lims, lims, "--", color=terracotta, linewidth=1.8, label="Predicción perfecta (y = x)")
     ax1.set_xlim(lims)
     ax1.set_ylim([-100, 2000])
-    ax1.set_xlabel("Precio Real (Miles de USD)")
-    ax1.set_ylabel("Precio Predicho (Miles de USD)")
-    ax1.set_title("Precio Real vs. Predicho (Regresión Lineal)", fontweight="bold")
-    ax1.legend(fontsize=8.5)
+    ax1.set_xlabel("Precio Real (Miles de USD)", color=charcoal)
+    ax1.set_ylabel("Precio Predicho (Miles de USD)", color=charcoal)
+    ax1.set_title("Precio Real vs. Predicho (Regresión Lineal)", fontweight="bold", color=forest)
+    style_ax(ax1)
+    ax1.grid(alpha=0.25, linestyle="--")
+    ax1.legend(frameon=False, fontsize=8.5)
 
-    ax2.hist(residuals, bins=50, range=(-800, 800), color="#0ea5e9", alpha=0.85, edgecolor="white")
-    ax2.axvline(0, color="#dc2626", linestyle="--", linewidth=1.4, label="Residuo = 0")
-    ax2.set_xlabel("Residuo: Real − Predicho (Miles de USD)")
-    ax2.set_ylabel("Frecuencia")
-    ax2.set_title("Distribución de Residuos (Regresión Lineal)", fontweight="bold")
-    ax2.legend(fontsize=8.5)
+    ax2.hist(residuals, bins=50, range=(-800, 800), color=sand, alpha=0.88, edgecolor="white")
+    ax2.axvline(0, color=terracotta, linestyle="--", linewidth=1.6, label="Residuo = 0")
+    ax2.set_xlabel("Residuo: Real − Predicho (Miles de USD)", color=charcoal)
+    ax2.set_ylabel("Frecuencia", color=charcoal)
+    ax2.set_title("Distribución de Residuos (Regresión Lineal)", fontweight="bold", color=forest)
+    style_ax(ax2)
+    ax2.grid(axis="y", alpha=0.25, linestyle="--")
+    ax2.legend(frameon=False, fontsize=8.5)
 
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "real_vs_predicho.png", bbox_inches="tight")
@@ -330,72 +329,6 @@ def main() -> None:
         "short_name": "Reg. Lineal\n(+ Estado)",
         "category": "Estadístico (Principal)",
         **m2,
-    })
-
-    # Modelo 3: Regresión Ridge (L2 con estandarización)
-    print("Entrenando Modelo 3: Ridge (L2 + Estado)...")
-    pre_ridge = ColumnTransformer(
-        transformers=[
-            ("num", StandardScaler(), features_num),
-            ("cat", OneHotEncoder(handle_unknown="ignore"), ["state"]),
-        ]
-    )
-    ridge_model = Pipeline([
-        ("preprocessor", pre_ridge),
-        ("regressor", Ridge(alpha=10.0, random_state=42)),
-    ])
-    ridge_model.fit(X_train, y_train)
-    pred_ridge = ridge_model.predict(X_test)
-    m3 = evaluate_predictions(y_test, pred_ridge)
-    model_results.append({
-        "name": "Regresión Ridge (L2 + Estado)",
-        "short_name": "Ridge\n(+ Estado)",
-        "category": "Machine Learning",
-        **m3,
-    })
-
-    # Modelo 4: Árbol de Decisión (DecisionTreeRegressor)
-    print("Entrenando Modelo 4: Árbol de Decisión...")
-    pre_tree = ColumnTransformer(
-        transformers=[
-            ("num", "passthrough", features_num),
-            ("cat", OneHotEncoder(handle_unknown="ignore"), ["state"]),
-        ]
-    )
-    dt_model = Pipeline([
-        ("preprocessor", pre_tree),
-        ("regressor", DecisionTreeRegressor(max_depth=14, min_samples_leaf=50, random_state=42)),
-    ])
-    dt_model.fit(X_train, y_train)
-    pred_dt = dt_model.predict(X_test)
-    m4 = evaluate_predictions(y_test, pred_dt)
-    model_results.append({
-        "name": "Árbol de Decisión (max_depth=14)",
-        "short_name": "Árbol de\nDecisión",
-        "category": "Machine Learning",
-        **m4,
-    })
-
-    # Modelo 5: HistGradientBoostingRegressor (Gradient Boosting)
-    print("Entrenando Modelo 5: HistGradientBoostingRegressor...")
-    pre_hgb = ColumnTransformer(
-        transformers=[
-            ("num", "passthrough", features_num),
-            ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), ["state"]),
-        ]
-    )
-    hgb_model = Pipeline([
-        ("preprocessor", pre_hgb),
-        ("regressor", HistGradientBoostingRegressor(max_iter=150, max_depth=10, random_state=42)),
-    ])
-    hgb_model.fit(X_train, y_train)
-    pred_hgb = hgb_model.predict(X_test)
-    m5 = evaluate_predictions(y_test, pred_hgb)
-    model_results.append({
-        "name": "Gradient Boosting (HistGBR)",
-        "short_name": "Gradient\nBoosting",
-        "category": "Machine Learning",
-        **m5,
     })
 
     # Extraer coeficientes de la Regresión Lineal Principal

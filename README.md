@@ -1,11 +1,11 @@
 # Predicción del Valor de Propiedades Inmobiliarias
 
-Proyecto final de estadística aplicada: análisis exploratorio, modelado con **Regresión Lineal (`scikit-learn`)**, comparación de modelos de Machine Learning, informe técnico en LaTeX y aplicación interactiva con simulador de precios en **Streamlit**.
+Proyecto final de estadística aplicada: análisis exploratorio, modelado con **Regresión Lineal estándar (`LinearRegression` de `scikit-learn`)**, informe técnico en LaTeX y aplicación interactiva con simulador de precios en **Streamlit**.
 
 ## Estructura del Proyecto
 
-- `app.py`: Aplicación de Streamlit lista para deployar (incluye simulador interactivo de precios con Regresión Lineal, dashboard de EDA y comparación de modelos).
-- `train_model.py`: Script reproducible de limpieza de datos, entrenamiento de modelos, cálculo de métricas y generación de gráficas.
+- `app.py` + `src/`: Aplicación modular de Streamlit lista para deployar (valuador interactivo de precios, exploración del mercado y evaluación del modelo lineal).
+- `train_model.py`: Script reproducible de limpieza de datos, entrenamiento de `LinearRegression`, cálculo de métricas y generación de gráficas.
 - `models/linear_regression_model.joblib`: Modelo `LinearRegression` de `scikit-learn` entrenado (2.2 KB).
 - `models/metrics_and_eda.json`: Estadísticas descriptivas, matriz de correlación, coeficientes y métricas de comparación.
 - `data/sample_realtor_clean.csv`: Muestra ligera representativa (8,000 registros) para las gráficas interactivas en Streamlit.
