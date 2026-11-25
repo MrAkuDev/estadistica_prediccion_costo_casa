@@ -26,9 +26,3 @@ Si deseas reentrenar los modelos y regenerar las figuras desde `realtor-data.zip
 ```bash
 python train_model.py
 ```
-
-## Despliegue en Streamlit Community Cloud
-
-1. Haz commit y push de los archivos del repositorio a GitHub.
-2. Ingresa a [share.streamlit.io](https://share.streamlit.io), selecciona el repositorio y define `app.py` como archivo principal.
-3. Haz clic en **Deploy**.
