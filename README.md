@@ -2,6 +2,8 @@
 
 Dataset usado: https://www.kaggle.com/datasets/ahmedshahriarsakib/usa-real-estate-dataset
 
+Nota: dado que el dataset pesa 170 mb, se tiene que descargar y poner en la raiz del proyecto para poderlo correr local
+
 Proyecto final de estadística aplicada: análisis exploratorio, modelado con **Regresión Lineal estándar (`LinearRegression` de `scikit-learn`)**, informe técnico en LaTeX y aplicación interactiva con simulador de precios en **Streamlit**.
 
 ## Estructura del Proyecto
