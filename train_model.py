@@ -1,14 +1,3 @@
-"""
-Script de entrenamiento, análisis exploratorio y generación de artefactos
-para el proyecto: Predicción del Valor de Propiedades Inmobiliarias.
-
-Genera:
-- models/linear_regression_model.joblib  (Modelo principal de Regresión Lineal de scikit-learn)
-- models/metrics_and_eda.json            (Estadísticas, correlaciones, métricas y coeficientes)
-- data/sample_realtor_clean.csv          (Muestra representativa ligera para Streamlit)
-- informe/figuras/*.png                  (Gráficas en alta resolución para el informe en LaTeX)
-"""
-
 from __future__ import annotations
 
 import json
