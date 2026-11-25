@@ -1,5 +1,7 @@
 # Predicción del Valor de Propiedades Inmobiliarias
 
+Dataset usado: https://www.kaggle.com/datasets/ahmedshahriarsakib/usa-real-estate-dataset
+
 Proyecto final de estadística aplicada: análisis exploratorio, modelado con **Regresión Lineal estándar (`LinearRegression` de `scikit-learn`)**, informe técnico en LaTeX y aplicación interactiva con simulador de precios en **Streamlit**.
 
 ## Estructura del Proyecto
